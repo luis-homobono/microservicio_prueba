@@ -2,10 +2,11 @@ from typing import List
 
 from flask_smorest import Blueprint, abort
 from flask.views import MethodView
-from flask import request
+from flask import Response
 
 from .schemas import PersonaBusquedaSchema, PersonaSchema, PersonaBusquedaRespSchema
-from db import personas
+from .utils import save_bitacora
+from models import Persona, Registro
 
 blp = Blueprint("personas", __name__, description="Operaciones para personas.")
 
@@ -15,6 +16,7 @@ class Personas(MethodView):
     @blp.response(200, PersonaSchema(many=True))
     def get(self):
         try:
+            personas = Persona.query.all()
             return personas
         except KeyError:
             abort(404, message="Personas no encontradas.")
@@ -22,12 +24,16 @@ class Personas(MethodView):
     @blp.arguments(schema=PersonaBusquedaSchema)
     @blp.response(200, PersonaBusquedaRespSchema)
     def post(self, request_data):
-        print(request_data)
-        if "nombre" not in request_data:
-            return {"encontrado": False}
+        encontrado = False
+        if "nombre" in request_data:
+            query = Persona.query.filter(
+                Persona.nombre.ilike(f"%{request_data['nombre']}%")
+            ).all()
+            if len(query) > 0:
+                encontrado = True
 
-        for persona in personas:
-            if request_data["nombre"] == persona["nombre"]:
-                return {"encontrado": True}
+        respuesta = {"encontrado": encontrado}
+        bitacora = {"parametros": request_data, "respuesta": respuesta}
+        save_bitacora(model=Registro, data=bitacora)
 
-        return {"encontrado": False}
+        return respuesta

@@ -1,2 +1,2 @@
-from registros import Registro
-from personas import Persona
+from .registros import Registro
+from .personas import Persona
