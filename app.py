@@ -8,7 +8,11 @@ from db import db
 import models
 
 
-def create_app():
+def create_app() -> Flask:
+    """Factoria de app
+
+    :return: App instancia
+    """
     app = Flask(__name__)
     app.config.from_object(Config)
     db.init_app(app)

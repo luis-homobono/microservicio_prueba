@@ -4,6 +4,8 @@ from db import db
 
 
 class Registro(db.Model):
+    """Modelo de registro
+    """
     __tablename__ = "bit_registros"
 
     id = db.Column(db.Integer, primary_key=True)

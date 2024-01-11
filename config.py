@@ -2,6 +2,8 @@ import os
 
 
 class Config:
+    """Configuraciones
+    """
     PROPAGATE_EXCEPTIONS = True
     API_TITLE = "Microservicio Prueba"
     API_VERSION = "v1"

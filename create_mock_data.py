@@ -1,3 +1,6 @@
+"""
+Script para generar datos de prueba haciendo uso de librería faker
+"""
 from faker import Faker
 
 from models.personas import Persona
